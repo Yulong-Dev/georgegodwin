@@ -14,10 +14,10 @@ const skills = [
 
 const experience = [
   {
-    role: 'Senior Frontend Developer',
-    company: 'Fairmoney',
+    role: 'Freelance Fullstack Developer',
+    company: 'Self-Employed',
     period: '2022 – Present',
-    desc: 'Leading frontend development for Nigeria\'s top digital lending platform. Built loan management dashboards and automated credit scoring UIs serving 500K+ users.',
+    desc: 'freelance Fullstack Developer from Nigeria with 5+ years of experience building modern web applications — from URL shorteners like Devalyze and e-commerce platforms like Wyvadot PR, to fintech dashboards and business management systems for compainies and individuals. I build clean, scalable, and user-focused products from frontend to backend, and I am always open to exciting new projects.',
   },
   {
     role: 'Fullstack Developer',
