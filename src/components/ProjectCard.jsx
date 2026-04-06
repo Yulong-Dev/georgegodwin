@@ -1,7 +1,10 @@
-import { ExternalLink, Github, Tag } from 'lucide-react'
+import { ExternalLink, Github, Tag, Lock, EyeOff } from 'lucide-react'
 
 export default function ProjectCard({ project, featured = false }) {
-  const { title, description, image, liveUrl, githubUrl, tags, category } = project
+  const { title, description, image, liveUrl, githubUrl, tags, category, isPrivate } = project
+
+  const hasLive   = liveUrl   && liveUrl   !== '#'
+  const hasGithub = githubUrl && githubUrl !== '#'
 
   return (
     <div className={`group bg-slate-900 border border-slate-800 rounded-xl overflow-hidden hover:border-cyan-500/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 flex flex-col ${featured ? '' : ''}`}>
@@ -16,7 +19,6 @@ export default function ProjectCard({ project, featured = false }) {
             loading="lazy"
           />
         ) : (
-          /* Placeholder when no image is set */
           <div className="w-full h-full bg-slate-800 flex items-center justify-center">
             <div className="text-center">
               <Tag className="w-8 h-8 text-slate-600 mx-auto mb-2" />
@@ -32,29 +34,38 @@ export default function ProjectCard({ project, featured = false }) {
           {category}
         </span>
 
-        {/* Link icons overlay */}
-        <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          {liveUrl && liveUrl !== '#' && (
-            <a
-              href={liveUrl}
-              target="_blank" rel="noreferrer"
-              className="w-8 h-8 rounded-lg bg-slate-950/90 border border-slate-700 flex items-center justify-center hover:bg-cyan-500 hover:border-cyan-500 hover:text-slate-950 text-white transition-all"
-              title="Live Demo"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          )}
-          {githubUrl && githubUrl !== '#' && (
-            <a
-              href={githubUrl}
-              target="_blank" rel="noreferrer"
-              className="w-8 h-8 rounded-lg bg-slate-950/90 border border-slate-700 flex items-center justify-center hover:bg-slate-700 text-white transition-all"
-              title="GitHub Repo"
-            >
-              <Github className="w-3.5 h-3.5" />
-            </a>
-          )}
-        </div>
+        {/* Link icons overlay — hidden entirely when isPrivate */}
+        {!isPrivate && (
+          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            {hasLive && (
+              <a
+                href={liveUrl}
+                target="_blank" rel="noreferrer"
+                className="w-8 h-8 rounded-lg bg-slate-950/90 border border-slate-700 flex items-center justify-center hover:bg-cyan-500 hover:border-cyan-500 hover:text-slate-950 text-white transition-all"
+                title="Live Demo"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {hasGithub && (
+              <a
+                href={githubUrl}
+                target="_blank" rel="noreferrer"
+                className="w-8 h-8 rounded-lg bg-slate-950/90 border border-slate-700 flex items-center justify-center hover:bg-slate-700 text-white transition-all"
+                title="GitHub Repo"
+              >
+                <Github className="w-3.5 h-3.5" />
+              </a>
+            )}
+          </div>
+        )}
+
+        {/* Private badge on image */}
+        {isPrivate && (
+          <div className="absolute top-3 right-3 flex items-center gap-1.5 font-mono text-xs px-2.5 py-1 rounded-full bg-slate-950/90 border border-slate-600 text-slate-400">
+            <Lock className="w-3 h-3" /> Private
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -77,7 +88,13 @@ export default function ProjectCard({ project, featured = false }) {
 
         {/* Action links */}
         <div className="flex items-center gap-3 pt-4 border-t border-slate-800">
-          {liveUrl && liveUrl !== '#' ? (
+
+          {/* Live link */}
+          {isPrivate ? (
+            <span className="flex items-center gap-1.5 text-xs font-body text-slate-600">
+              <EyeOff className="w-3.5 h-3.5" /> Links Hidden
+            </span>
+          ) : hasLive ? (
             <a
               href={liveUrl}
               target="_blank" rel="noreferrer"
@@ -87,18 +104,27 @@ export default function ProjectCard({ project, featured = false }) {
             </a>
           ) : (
             <span className="flex items-center gap-1.5 text-xs font-body text-slate-600">
-              <ExternalLink className="w-3.5 h-3.5" /> Private Project
+              <ExternalLink className="w-3.5 h-3.5" /> Not Live
             </span>
           )}
-          {githubUrl && githubUrl !== '#' && (
-            <a
-              href={githubUrl}
-              target="_blank" rel="noreferrer"
-              className="flex items-center gap-1.5 text-xs font-body font-semibold text-slate-400 hover:text-white transition-colors ml-auto"
-            >
-              <Github className="w-3.5 h-3.5" /> Source Code
-            </a>
+
+          {/* GitHub link */}
+          {!isPrivate && (
+            hasGithub ? (
+              <a
+                href={githubUrl}
+                target="_blank" rel="noreferrer"
+                className="flex items-center gap-1.5 text-xs font-body font-semibold text-slate-400 hover:text-white transition-colors ml-auto"
+              >
+                <Github className="w-3.5 h-3.5" /> Source Code
+              </a>
+            ) : (
+              <span className="flex items-center gap-1.5 text-xs font-body text-slate-600 ml-auto">
+                <Lock className="w-3.5 h-3.5" /> Private Repo
+              </span>
+            )
           )}
+
         </div>
       </div>
     </div>
